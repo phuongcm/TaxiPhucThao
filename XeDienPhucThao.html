@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Điện Phúc Thảo - Dịch vụ Xanh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'main-blue': '#1790ff', 
+                        'dark-blue': '#0067CC', 
+                    },
+                    fontFamily: {
+                        sans: ['Be Vietnam Pro', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Tối ưu tổng thể và nền */
+        body {
+            background-color: #f8f9fa; /* Nền trắng xám nhẹ */
+            min-height: 100vh;
+        }
+        .card-shadow {
+            /* Shadow tinh tế hơn, phù hợp với design hiện đại */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Cố định CTA ở cuối màn hình */
+        .fixed-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+        }
+        .cta-button {
+            background: linear-gradient(180deg, #1790ff 0%, #0067CC 100%); 
+            transition: all 0.2s ease-in-out;
+        }
+        .cta-button:hover {
+            background: linear-gradient(180deg, #3A9FFF 0%, #007DED 100%);
+            transform: scale(1.02);
+        }
+
+        /* Tối ưu Header cho mobile */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .main-header-line1 {
+            font-size: 1.125rem; /* text-xl -> text-lg (18px) cho mobile gọn gàng hơn */
+            line-height: 1.1;
+            font-weight: 800;
+        }
+        .main-header-line2 {
+            font-size: 0.75rem; /* text-xs (12px) */
+            line-height: 1.2;
+            font-weight: 500;
+            color: #6c757d; /* Màu xám tối cho phụ đề */
+        }
+        .contact-button {
+            padding: 0.4rem 0.8rem;
+            flex-shrink: 0;
+            font-size: 0.875rem; /* text-sm */
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- HEADER: Gọn gàng và tập trung -->
+    <header class="bg-white card-shadow p-3 sticky top-0 z-10 border-b border-gray-100">
+        <div class="header-container max-w-lg mx-auto">
+            
+            <!-- Logo/Title Block -->
+            <div class="text-left min-w-0">
+                <h1 class="main-header-line1 text-main-blue uppercase">TAXI ĐIỆN PHÚC THẢO</h1>
+                <p class="main-header-line2">Xanh sạch - An toàn - Cước mềm</p>
+            </div>
+            
+            <!-- Contact Button -->
+            <button onclick="document.getElementById('contact-modal').classList.remove('hidden')" class="contact-button text-white font-semibold rounded-full bg-main-blue hover:bg-dark-blue transition duration-150 shadow-md shadow-main-blue/30">
+                Liên hệ
+            </button>
+        </div>
+    </header>
+    <!-- END HEADER -->
+
+    <main class="p-3 pb-24 max-w-lg mx-auto"> <!-- Giảm padding tổng thể -->
+
+        <!-- Banner Image -->
+        <section class="mt-3 mb-4 rounded-xl overflow-hidden card-shadow bg-white">
+            <img 
+                src="https://placehold.co/800x450/0067CC/ffffff?text=VFE34+ELECTRIC+CAR+IMAGE" 
+                alt="Hình ảnh Taxi Điện Phúc Thảo VFE34" 
+                class="w-full h-auto object-cover"
+                onerror="this.onerror=null; this.src='https://placehold.co/800x450/0067CC/ffffff?text=LỖI+TẢI+ẢNH+XE+ĐIỆN';"
+            />
+        </section>
+
+        <!-- 1. Kiểm tra Khoảng cách -->
+        <section class="bg-white p-4 rounded-xl card-shadow mb-4">
+            <h3 class="text-base font-bold text-gray-800 mb-3 border-b pb-2">1. Kiểm tra Khoảng cách (Tra cứu trên GG Maps)</h3>
+            <div class="space-y-4">
+                <div class="relative">
+                    <label for="pickup" class="block text-xs font-medium text-main-blue mb-1">ĐIỂM ĐÓN</label>
+                    <input type="text" id="pickup" placeholder="VD: 123 Đường Nguyễn Huệ" class="block w-full border border-gray-300 focus:border-main-blue focus:ring-0 p-3 text-sm text-gray-700 rounded-lg transition duration-150" />
+                </div>
+                <div class="relative">
+                    <label for="destination" class="block text-xs font-medium text-red-500 mb-1">ĐIỂM ĐẾN</label>
+                    <input type="text" id="destination" placeholder="VD: 456 Đường Lê Lợi" class="block w-full border border-gray-300 focus:border-red-500 focus:ring-0 p-3 text-sm text-gray-700 rounded-lg transition duration-150" />
+                </div>
+                
+                <div id="map-message" class="hidden p-3 bg-red-100 rounded-lg border border-red-300 text-red-600 font-medium text-sm">
+                </div>
+
+                <button onclick="openGoogleMaps()" class="bg-main-blue hover:bg-dark-blue transition duration-150 w-full py-3 text-white font-bold rounded-xl shadow-lg shadow-main-blue/30 flex items-center justify-center space-x-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m3-6v8.25m3-6V18m-10.5-1.5H21V5.25A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25v12a2.25 2.25 0 002.25 2.25H12" />
+                    </svg>
+                    TÌM TUYẾN ĐI TRÊN GOOGLE MAPS
+                </button>
+            </div>
+        </section>
+        
+        <!-- 2. Tính Cước Phí Ước Tính -->
+        <section class="bg-white p-4 rounded-xl card-shadow mb-4">
+            <h3 class="text-base font-bold text-gray-800 mb-3 border-b pb-2">2. Tính Cước Phí Ước Tính</h3>
+            <div class="space-y-4">
+                <div class="relative">
+                    <label for="distanceKmManual" class="block text-xs font-medium text-main-blue mb-1">KHOẢNG CÁCH (Nhập số km từ Google Maps)</label>
+                    <div class="flex items-center mt-1">
+                         <input type="number" step="0.1" id="distanceKmManual" placeholder="VD: 5.8" class="block w-full border border-gray-300 focus:border-main-blue focus:ring-0 p-3 text-sm text-gray-700 rounded-l-lg transition duration-150" />
+                         <span class="bg-gray-100 p-3 border border-gray-300 text-gray-600 font-medium rounded-r-lg border-l-0 text-sm">km</span>
+                    </div>
+                </div>
+
+                <div id="fare-result" class="hidden p-3 bg-green-50 rounded-lg border border-green-300">
+                </div>
+
+                <button onclick="calculateFare()" class="cta-button w-full py-3 text-white font-bold rounded-xl shadow-lg shadow-dark-blue/30 hover:shadow-dark-blue/50 transition duration-150 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline-block mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12M18 12H6" />
+                    </svg>
+                    TÍNH CƯỚC PHÍ
+                </button>
+                <p class="text-xs text-gray-500 mt-2">*Cước phí tham khảo: 12.000 VNĐ mở cửa + 12k/km (≤ 10km), 10k/km (> 10km).</p>
+            </div>
+        </section>
+        
+        <!-- FOOTER: Gọn gàng hơn -->
+        <footer class="text-left text-sm text-gray-700 mt-6 pt-4 border-t border-gray-200">
+            <h4 class="text-sm font-bold text-gray-800 mb-2">Thông tin liên hệ:</h4>
+            <div class="space-y-2">
+                <div class="flex items-start space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-main-blue flex-shrink-0 mt-0.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <p><strong>Địa chỉ:</strong> 287 Trần Hưng Đạo, P.5, TP. Cà Mau.</p>
+                </div>
+                <div class="flex items-start space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-main-blue flex-shrink-0 mt-0.5"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <p><strong>Email:</strong> <a href="mailto:phucthaotaxi@email.com" class="text-main-blue hover:underline">phucthaotaxi@email.com</a></p>
+                </div>
+            </div>
+            
+            <p class="text-center text-xs text-gray-500 mt-4 pt-3 border-t border-gray-100">© 2024 Taxi Điện Phúc Thảo. Hỗ trợ 24/7</p>
+        </footer>
+        <!-- END FOOTER -->
+
+    </main>
+
+    <!-- Fixed Call to Action (CTA) Button - Gọn gàng hơn -->
+    <div class="fixed-cta bg-white p-3 border-t border-gray-200">
+        <div class="max-w-lg mx-auto">
+            <a href="tel:0942836969" class="cta-button w-full flex items-center justify-center space-x-2 py-3 rounded-xl text-lg font-bold text-white shadow-lg shadow-dark-blue/50">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.183.424l-1.423 1.783a.75.75 0 001.06 1.06l1.783-1.423c.369-.281.534-.743.424-1.183l-1.106-4.423a1.125 1.125 0 00-1.091-.852H15V6.75a7.5 7.5 0 00-7.5-7.5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9 4.03 9 9 9z" />
+                </svg>
+                <span>GỌI XE NGAY - 0942 836 969</span> 
+            </a>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onclick="this.classList.add('hidden')">
+        <div class="bg-white p-6 rounded-xl w-full max-w-sm card-shadow" onclick="event.stopPropagation()">
+            <h3 class="text-xl font-bold text-main-blue mb-4">Thông Tin Liên Hệ</h3>
+            <p class="mb-3 text-gray-700 text-sm">Hãy gọi cho chúng tôi để đặt xe nhanh nhất hoặc Email thắc mắc về dịch vụ.</p>
+            <div class="space-y-3">
+                <a href="tel:0942836969" class="flex items-center space-x-3 p-3 bg-main-blue text-white rounded-lg font-semibold hover:opacity-90 transition duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.636.586 1.832 1.455l.257 1.144c.31 1.385-.434 2.868-1.503 3.524l-2.19 1.488c-.97.661-1.28 1.956-.516 3.06l1.378 1.968c.995 1.418 2.232 2.655 3.65 3.65l1.969 1.379c1.104.764 2.399.454 3.06-.516l1.488-2.19c.656-1.07 2.14-1.813 3.525-1.503l1.144.257c.869.196 1.455.972 1.455 1.832V19.5a3 3 0 01-3 3h-2.25c-.067 0-.134-.002-.2-.007C10.126 21.684 4.195 15.688 2.257 8.28c-.005-.067-.135-.007-.2V4.5z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Hotline 1: 0942 836 969</span>
+                </a>
+                <a href="tel:0869384858" class="flex items-center space-x-3 p-3 bg-main-blue text-white rounded-lg font-semibold hover:opacity-90 transition duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.636.586 1.832 1.455l.257 1.144c.31 1.385-.434 2.868-1.503 3.524l-2.19 1.488c-.97.661-1.28 1.956-.516 3.06l1.378 1.968c.995 1.418 2.232 2.655 3.65 3.65l1.969 1.379c1.104.764 2.399.454 3.06-.516l1.488-2.19c.656-1.07 2.14-1.813 3.525-1.503l1.144.257c.869.196 1.455.972 1.455 1.832V19.5a3 3 0 01-3 3h-2.25c-.067 0-.134-.002-.2-.007C10.126 21.684 4.195 15.688 2.257 8.28c-.005-.067-.135-.007-.2V4.5z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Hotline 2: 0869 384 858</span>
+                </a>
+                <a href="mailto:phucthaotaxi@email.com" class="flex items-center space-x-3 p-3 bg-gray-100 text-gray-800 rounded-lg font-semibold hover:bg-gray-200 transition duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    <span>Gửi Email</span>
+                </a>
+            </div>
+            <button onclick="document.getElementById('contact-modal').classList.add('hidden')" class="mt-4 w-full text-sm text-gray-500 hover:text-gray-700 transition duration-150">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        // Hàm mở Google Maps
+        function openGoogleMaps() {
+            const pickup = document.getElementById('pickup').value.trim();
+            const destination = document.getElementById('destination').value.trim();
+            const messageDiv = document.getElementById('map-message');
+            
+            if (!pickup || !destination) {
+                messageDiv.classList.remove('hidden');
+                messageDiv.innerHTML = 'Vui lòng nhập đầy đủ **Điểm Đón** và **Điểm Đến** để mở bản đồ.';
+                return;
+            } else {
+                 messageDiv.classList.add('hidden');
+            }
+
+            const mapsUrl = `https://www.google.com/maps/dir/${encodeURIComponent(pickup)}/${encodeURIComponent(destination)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        // Hàm tính cước phí
+        function calculateFare() {
+            const distanceKmManual = document.getElementById('distanceKmManual').value.trim();
+            const resultDiv = document.getElementById('fare-result');
+            
+            if (!distanceKmManual || isNaN(distanceKmManual) || parseFloat(distanceKmManual) <= 0) {
+                resultDiv.classList.remove('hidden');
+                resultDiv.classList.remove('bg-green-50', 'border-green-300');
+                resultDiv.classList.add('bg-red-100', 'border-red-300');
+                resultDiv.innerHTML = '<p class="text-red-600 font-medium">⚠️ Vui lòng nhập khoảng cách hợp lệ (bằng số km lớn hơn 0).</p>';
+                return;
+            }
+
+            const distanceKm = parseFloat(distanceKmManual);
+
+            let estimatedFare = 0;
+            const BASE_FARE = 12000;
+            const RATE_BELOW_10KM = 12000;
+            const RATE_ABOVE_10KM = 10000;
+
+            if (distanceKm <= 10) {
+                estimatedFare = BASE_FARE + (distanceKm * RATE_BELOW_10KM);
+            } else {
+                estimatedFare = BASE_FARE + 
+                                (10 * RATE_BELOW_10KM) + 
+                                ((distanceKm - 10) * RATE_ABOVE_10KM);
+            }
+
+            // Làm tròn đến nghìn gần nhất
+            const displayFare = Math.round(estimatedFare / 1000) * 1000; 
+            const formattedFare = displayFare.toLocaleString('vi-VN');
+            const displayDistance = distanceKm.toFixed(1); // Hiển thị 1 chữ số thập phân
+
+            // Cập nhật kết quả
+            resultDiv.classList.remove('hidden', 'bg-red-100', 'border-red-300');
+            resultDiv.classList.add('bg-green-50', 'border-green-300');
+            resultDiv.innerHTML = `
+                <div class="flex items-center justify-between text-gray-800 text-sm">
+                    <span class="font-bold">Khoảng cách:</span>
+                    <span class="font-bold text-main-blue text-xl">${displayDistance} km</span>
+                </div>
+                <div class="flex items-center justify-between text-gray-800 mt-2 border-t pt-2">
+                    <span class="font-bold text-lg">CƯỚC PHÍ ƯỚC TÍNH:</span>
+                    <span class="font-extrabold text-main-blue text-3xl">${formattedFare} VNĐ</span>
+                </div>
+            `;
+        }
+    </script>
+
+</body>
+</html>
